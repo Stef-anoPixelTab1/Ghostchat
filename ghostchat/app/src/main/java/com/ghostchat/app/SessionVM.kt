@@ -14,6 +14,7 @@ import io.github.jan.supabase.gotrue.providers.builtin.OTP
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.postgrest.rpc
 import io.github.jan.supabase.realtime.*
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.*
@@ -120,7 +121,7 @@ class SessionVM(app: Application) : AndroidViewModel(app) {
 
     private suspend fun uploadAvatar(uid: String, uri: Uri): String {
         val bytes = withContext(Dispatchers.IO) { readImage(uri) }
-        sb.storage.from("avatars").upload("$uid/avatar.jpg", bytes) { upsert = true }
+               sb.storage.from("avatars").upload("$uid/avatar.jpg", bytes, upsert = true)
         return sb.storage.from("avatars").publicUrl("$uid/avatar.jpg") + "?v=${System.currentTimeMillis()}"
     }
 
