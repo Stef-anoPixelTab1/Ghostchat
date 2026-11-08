@@ -8,6 +8,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ghostchat
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
@@ -36,9 +39,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Ghostchat-apk
-          path: Ghostchat.apk
+          path: ghostchat/Ghostchat.apk
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: Ghostchat.apk
+          files: ghostchat/Ghostchat.apk
