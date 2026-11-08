@@ -98,10 +98,7 @@ fun CallScreen(sv: SessionVM, call: ActiveCall) {
                 val (token, url) = sv.livekitToken(call.id)
                 room.connect(url, token)
                 room.localParticipant.setMicrophoneEnabled(true)
-                if (call.video) {
-                    room.localParticipant.setCameraEnabled(true)
-                    local = room.localParticipant.getTrackPublication(Track.Source.CAMERA)?.track as? VideoTrack
-                }
+                if (call.video) room.localParticipant.setCameraEnabled(true)
                 connected = true
             } catch (e: Exception) { sv.error = e.message; sv.hangUp() }
         }
@@ -123,7 +120,11 @@ fun CallScreen(sv: SessionVM, call: ActiveCall) {
                 muted = !muted; scope.launch { runCatching { room.localParticipant.setMicrophoneEnabled(!muted) } }
             }
             if (call.video) RoundBtn(if (camOn) "📷" else "🚫", Color(0x55FFFFFF)) {
-                camOn = !camOn; scope.launch { runCatching { room.localParticipant.setCameraEnabled(camOn) } }
+                camOn = !camOn
+                scope.launch {
+                    runCatching { room.localParticipant.setCameraEnabled(camOn) }
+                    local = if (camOn) room.localParticipant.getTrackPublication(Track.Source.CAMERA)?.track as? VideoTrack else null
+                }
             }
             RoundBtn("📞", Color(0xFFD32F2F)) { sv.hangUp() }
         }
