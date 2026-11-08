@@ -17,14 +17,32 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ghostchat.app.ui.*
+import java.io.File
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.Surface
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val f = File(filesDir, "crash.txt")
+        if (f.exists()) {
+            val txt = f.readText(); f.delete()
+            setContent {
+                MaterialTheme {
+                    Surface(Modifier.fillMaxSize()) {
+                        Box(Modifier.verticalScroll(rememberScrollState()).padding(16.dp)) {
+                            SelectionContainer { Text(txt) }
+                        }
+                    }
+                }
+            }
+            return
+        }
         setContent { GhostApp() }
     }
 }
-
 @Composable
 fun GhostApp(vm: AppViewModel = viewModel(), sv: SessionVM = viewModel()) {
     val st by vm.state.collectAsState()
