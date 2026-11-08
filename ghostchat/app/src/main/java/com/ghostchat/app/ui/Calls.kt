@@ -98,7 +98,10 @@ fun CallScreen(sv: SessionVM, call: ActiveCall) {
                 val (token, url) = sv.livekitToken(call.id)
                 room.connect(url, token)
                 room.localParticipant.setMicrophoneEnabled(true)
-                if (call.video) room.localParticipant.setCameraEnabled(true)
+                if (call.video) {
+                    room.localParticipant.setCameraEnabled(true)
+                    local = room.localParticipant.getTrackPublication(Track.Source.CAMERA)?.track as? VideoTrack
+                }
                 connected = true
             } catch (e: Exception) { sv.error = e.message; sv.hangUp() }
         }
