@@ -26,6 +26,7 @@ import io.livekit.android.events.collect
 import io.livekit.android.renderer.TextureViewRenderer
 import io.livekit.android.room.Room
 import io.livekit.android.room.track.VideoTrack
+import io.livekit.android.room.track.Track
 import kotlinx.coroutines.launch
 
 /** Chiede i permessi (microfono, e fotocamera se video) e poi esegue onGo(video). */
@@ -86,8 +87,6 @@ fun CallScreen(sv: SessionVM, call: ActiveCall) {
             when (ev) {
                 is RoomEvent.TrackSubscribed -> (ev.track as? VideoTrack)?.let { remote = it }
                 is RoomEvent.TrackUnsubscribed -> if (ev.track is VideoTrack) remote = null
-                is RoomEvent.LocalTrackPublished -> (ev.publication.track as? VideoTrack)?.let { local = it }
-                is RoomEvent.LocalTrackUnpublished -> if (ev.publication.track is VideoTrack) local = null
                 else -> {}
             }
         }
