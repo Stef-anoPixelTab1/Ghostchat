@@ -11,6 +11,7 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <application
+                android:name=".CrashApp"
         android:allowBackup="false"
         android:label="Ghostchat"
         android:theme="@style/Theme.Ghostchat">
