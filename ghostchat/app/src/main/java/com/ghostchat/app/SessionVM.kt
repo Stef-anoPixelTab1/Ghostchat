@@ -279,7 +279,8 @@ class SessionVM(app: Application) : AndroidViewModel(app) {
     /** Ritorna (token, url del server LiveKit). */
     suspend fun livekitToken(callId: String): Pair<String, String> = withContext(Dispatchers.IO) {
         val jwt = sb.auth.currentAccessTokenOrNull() ?: error("no session")
-        val c = URL("${BuildConfig.SUPABASE_URL}/functions/v1/livekit-token").openConnection() as HttpURLConnection
+        val base = BuildConfig.SUPABASE_URL.trim().substringBefore("/rest/v1").trimEnd('/')
+        val c = URL("$base/functions/v1/livekit-token").openConnection() as HttpURLConnection
         c.requestMethod = "POST"; c.doOutput = true
         c.setRequestProperty("Content-Type", "application/json")
         c.setRequestProperty("Authorization", "Bearer $jwt")
