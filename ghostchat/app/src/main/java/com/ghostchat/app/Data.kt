@@ -9,9 +9,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 object Backend {
-    val configured = BuildConfig.SUPABASE_URL.startsWith("https://") && BuildConfig.SUPABASE_KEY.isNotBlank()
+    private val url = BuildConfig.SUPABASE_URL.trim().substringBefore("/rest/v1").trimEnd('/')
+    val configured = url.startsWith("https://") && BuildConfig.SUPABASE_KEY.isNotBlank()
     val client by lazy {
-        createSupabaseClient(BuildConfig.SUPABASE_URL, BuildConfig.SUPABASE_KEY) {
+        createSupabaseClient(url, BuildConfig.SUPABASE_KEY.trim()) {
             install(Auth); install(Postgrest); install(Realtime); install(Storage)
         }
     }
